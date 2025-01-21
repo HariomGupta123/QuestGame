@@ -1,32 +1,26 @@
 import React, { useEffect, useState, useRef } from "react";
 import Floor from "./Floor";
-import Graffiti from "./Graffiti"; // Import the Graffiti component
+import Graffiti from "./Graffiti";
+import LoseGraffiti from "./LoseGraffiti";
 
 const TowerQuestGame = () => {
-  const [difficulty, setDifficulty] = useState("Normal"); // Default difficulty
-  const [boxes, setBoxes] = useState([]); // Boxes for each floor
-  const [floors, setFloors] = useState(8); // Total floors
-  const [currentFloor, setCurrentFloor] = useState(1); // Current floor
-  const [playerBalance, setPlayerBalance] = useState(5); // Player's points
-  const [autoPlayRounds, setAutoPlayRounds] = useState(0); // Auto-play rounds
-  const [isAutoPlay, setIsAutoPlay] = useState(false); // Auto-play status
-  const [selectedBoxes, setSelectedBoxes] = useState(Array(floors).fill(null)); // Track selected boxes for each floor
+  const [difficulty, setDifficulty] = useState("Normal");
+  const [boxes, setBoxes] = useState([]);
+  const [floors, setFloors] = useState(8);
+  const [currentFloor, setCurrentFloor] = useState(1);
+  const [playerBalance, setPlayerBalance] = useState(5);
+  const [autoPlayRounds, setAutoPlayRounds] = useState(0);
+  const [isAutoPlay, setIsAutoPlay] = useState(false);
+  const [selectedBoxes, setSelectedBoxes] = useState(Array(floors).fill(null));
   const [isBobs, setBobs] = useState(false);
-  const [showGraffiti, setShowGraffiti] = useState(false); // Track whether to show graffiti
+  const [showGraffiti, setShowGraffiti] = useState(false);
+  const [showLoseGraffiti, setShowLoseGraffiti] = useState(false);
 
-  // Use a ref to track the current floor
   const currentFloorRef = useRef(currentFloor);
-
-  // Use a ref to track the selected boxes
   const selectedBoxesRef = useRef(selectedBoxes);
-
-  // Use a ref to track the auto-play interval
   const intervalRef = useRef(null);
-
-  // Use a ref to track consecutive gems
   const consecutiveGemsRef = useRef(0);
 
-  // Update the refs whenever state changes
   useEffect(() => {
     currentFloorRef.current = currentFloor;
   }, [currentFloor]);
@@ -35,7 +29,6 @@ const TowerQuestGame = () => {
     selectedBoxesRef.current = selectedBoxes;
   }, [selectedBoxes]);
 
-  // Generate boxes for each floor based on difficulty
   const generateBoxes = (difficulty, floors) => {
     const boxes = [];
     for (let floor = 1; floor <= floors; floor++) {
@@ -71,7 +64,6 @@ const TowerQuestGame = () => {
         floorBoxes.push("bomb");
       }
 
-      // Shuffle the boxes
       floorBoxes.sort(() => Math.random() - 0.5);
       boxes.push(floorBoxes);
     }
@@ -79,76 +71,56 @@ const TowerQuestGame = () => {
     return boxes;
   };
 
-  // Handle box selection
   const handleBoxSelect = (boxIndex) => {
-    const box = boxes[currentFloorRef.current - 1][boxIndex]; // Use the ref value
-    const newSelectedBoxes = [...selectedBoxesRef.current]; // Use the ref value
-    newSelectedBoxes[currentFloorRef.current - 1] = boxIndex; // Update selected box for the current floor
-    setSelectedBoxes(newSelectedBoxes); // Update state
-    selectedBoxesRef.current = newSelectedBoxes; // Update ref
+    const box = boxes[currentFloorRef.current - 1][boxIndex];
+    const newSelectedBoxes = [...selectedBoxesRef.current];
+    newSelectedBoxes[currentFloorRef.current - 1] = boxIndex;
+    setSelectedBoxes(newSelectedBoxes);
+    selectedBoxesRef.current = newSelectedBoxes;
 
     if (box === "gem") {
-      setCurrentFloor((prevFloor) => prevFloor + 1); // Update state
+      setCurrentFloor((prevFloor) => prevFloor + 1);
       setPlayerBalance((prev) => prev + 5);
-
-      // Increment consecutive gems count
       consecutiveGemsRef.current += 1;
 
-      // // Check if 4 consecutive gems are selected
-      // if (isAutoPlay) {
-      //   if (consecutiveGemsRef.current === 4) {
-      //     setShowGraffiti(true); // Show graffiti animation
-      //     setTimeout(() => {
-      //       setShowGraffiti(false); // Hide graffiti after 3 seconds
-      //       resetGame();
-      //     }, 3000);
-      //     setIsAutoPlay(false); // Stop auto-play
-      //     if (intervalRef.current) {
-      //       clearInterval(intervalRef.current);
-      //     }
-      //     return;
-      //   }
-      // }
-
       if (currentFloorRef.current + 1 > floors) {
-        setShowGraffiti(true); // Show graffiti animation
+        setShowGraffiti(true);
         setTimeout(() => {
-          setShowGraffiti(false); // Hide graffiti after 3 seconds
+          setShowGraffiti(false);
           resetGame();
         }, 3000);
       }
     } else if (box === "bomb") {
       setBobs(true);
-      alert("You hit a bomb! Game over.");
-      resetGame();
-      setIsAutoPlay(false); 
+      setShowLoseGraffiti(true);
+      setTimeout(() => {
+        setShowLoseGraffiti(false);
+        resetGame();
+      }, 3000);
+      setIsAutoPlay(false);
 
-     
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     }
   };
+
   const autoPayhandleBoxSelect = (boxIndex) => {
-    const box = boxes[currentFloorRef.current - 1][boxIndex]; 
-    const newSelectedBoxes = [...selectedBoxesRef.current]; 
-    newSelectedBoxes[currentFloorRef.current - 1] = boxIndex; 
-    setSelectedBoxes(newSelectedBoxes); 
-    selectedBoxesRef.current = newSelectedBoxes; 
+    const box = boxes[currentFloorRef.current - 1][boxIndex];
+    const newSelectedBoxes = [...selectedBoxesRef.current];
+    newSelectedBoxes[currentFloorRef.current - 1] = boxIndex;
+    setSelectedBoxes(newSelectedBoxes);
+    selectedBoxesRef.current = newSelectedBoxes;
 
     if (box === "gem") {
-      setCurrentFloor((prevFloor) => prevFloor + 1); 
+      setCurrentFloor((prevFloor) => prevFloor + 1);
       setPlayerBalance((prev) => prev + 5);
-
-   
       consecutiveGemsRef.current += 1;
-
-    
 
       if (consecutiveGemsRef.current === 4) {
         setShowGraffiti(true);
         setTimeout(() => {
-          setShowGraffiti(false); 
+          setShowGraffiti(false);
           resetGame();
         }, 3000);
         setIsAutoPlay(false);
@@ -158,48 +130,46 @@ const TowerQuestGame = () => {
         return;
       }
 
-
       if (currentFloorRef.current + 1 > floors) {
-        setShowGraffiti(true); 
+        setShowGraffiti(true);
         setTimeout(() => {
-          setShowGraffiti(false); 
+          setShowGraffiti(false);
           resetGame();
         }, 3000);
       }
     } else if (box === "bomb") {
       setBobs(true);
-      alert("You hit a bomb! Game over.");
-      resetGame();
-      setIsAutoPlay(false); 
+      setShowLoseGraffiti(true);
+      setTimeout(() => {
+        setShowLoseGraffiti(false);
+        resetGame();
+      }, 3000);
+      setIsAutoPlay(false);
 
-      
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     }
   };
 
-  // Reset the game
   const resetGame = () => {
     setCurrentFloor(1);
     setBoxes(generateBoxes(difficulty, floors));
-    setSelectedBoxes(Array(floors).fill(null)); 
-    selectedBoxesRef.current = Array(floors).fill(null); 
-    consecutiveGemsRef.current = 0; 
+    setSelectedBoxes(Array(floors).fill(null));
+    selectedBoxesRef.current = Array(floors).fill(null);
+    consecutiveGemsRef.current = 0;
+    setBobs(false);
   };
-
 
   const handleAutoPlay = (rounds) => {
     setIsAutoPlay(true);
     setAutoPlayRounds(rounds);
     let roundsLeft = rounds;
 
-  
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
 
-   
     intervalRef.current = setInterval(() => {
       if (roundsLeft <= 0 || playerBalance <= 0) {
         clearInterval(intervalRef.current);
@@ -210,17 +180,15 @@ const TowerQuestGame = () => {
 
       const boxIndex = Math.floor(
         Math.random() * boxes[currentFloorRef.current - 1].length
-      ); 
+      );
       autoPayhandleBoxSelect(boxIndex);
       roundsLeft--;
-    }, 1000); 
+    }, 1000);
   };
 
-  
   const cancelAutoPlay = () => {
     setIsAutoPlay(false);
 
-  
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
@@ -239,6 +207,7 @@ const TowerQuestGame = () => {
   return (
     <div>
       {showGraffiti && <Graffiti />}
+      {showLoseGraffiti && <LoseGraffiti />}
 
       <div>
         <label>Difficulty: </label>
@@ -268,12 +237,12 @@ const TowerQuestGame = () => {
             key={floorIndex}
             floorNumber={floorIndex + 1}
             boxes={floorBoxes}
-            isActive={floorIndex + 1 === currentFloor} 
-            selectedBox={selectedBoxes[floorIndex]} 
+            isActive={floorIndex + 1 === currentFloor}
+            selectedBox={selectedBoxes[floorIndex]}
             bobs={isBobs}
             onBoxSelect={
               floorIndex + 1 === currentFloor ? handleBoxSelect : null
-            } 
+            }
           />
         ))}
       </div>

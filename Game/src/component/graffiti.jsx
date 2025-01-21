@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import "./Graffiti.css"; // Import the CSS for the animation
 
 const Graffiti = () => {
