@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <h1>Tower Quest Game</h1>
      <TowerQuestGame/>
-     <Tower/>
+   
     </div>
   );
 }

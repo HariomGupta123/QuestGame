@@ -17,10 +17,10 @@ const Box = ({ content, isSelected, isActive, onSelect,selectedBox ,bobs}) => {
           ? "#12D812FF"
           : isActive
           ? "#00FF00"
-          : "gray", // Apply yellow background if selected
-        opacity: isActive ? 1 : 0.5, // Reduce opacity for inactive floors
+          : "gray",
+        opacity: isActive ? 1 : 0.5, 
       }}
-      onClick={isActive ? onSelect : null} // Only allow clicks for active floors
+      onClick={isActive ? onSelect : null} 
     >
       {bobs
         ? content === "gem"

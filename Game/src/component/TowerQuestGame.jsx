@@ -130,14 +130,14 @@ const TowerQuestGame = () => {
     }
   };
   const autoPayhandleBoxSelect = (boxIndex) => {
-    const box = boxes[currentFloorRef.current - 1][boxIndex]; // Use the ref value
-    const newSelectedBoxes = [...selectedBoxesRef.current]; // Use the ref value
-    newSelectedBoxes[currentFloorRef.current - 1] = boxIndex; // Update selected box for the current floor
-    setSelectedBoxes(newSelectedBoxes); // Update state
-    selectedBoxesRef.current = newSelectedBoxes; // Update ref
+    const box = boxes[currentFloorRef.current - 1][boxIndex]; 
+    const newSelectedBoxes = [...selectedBoxesRef.current]; 
+    newSelectedBoxes[currentFloorRef.current - 1] = boxIndex; 
+    setSelectedBoxes(newSelectedBoxes); 
+    selectedBoxesRef.current = newSelectedBoxes; 
 
     if (box === "gem") {
-      setCurrentFloor((prevFloor) => prevFloor + 1); // Update state
+      setCurrentFloor((prevFloor) => prevFloor + 1); 
       setPlayerBalance((prev) => prev + 5);
 
    
@@ -151,7 +151,7 @@ const TowerQuestGame = () => {
           setShowGraffiti(false); 
           resetGame();
         }, 3000);
-        setIsAutoPlay(false); // Stop auto-play
+        setIsAutoPlay(false);
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
         }
@@ -183,9 +183,9 @@ const TowerQuestGame = () => {
   const resetGame = () => {
     setCurrentFloor(1);
     setBoxes(generateBoxes(difficulty, floors));
-    setSelectedBoxes(Array(floors).fill(null)); // Reset selected boxes
-    selectedBoxesRef.current = Array(floors).fill(null); // Reset ref
-    consecutiveGemsRef.current = 0; // Reset consecutive gems count
+    setSelectedBoxes(Array(floors).fill(null)); 
+    selectedBoxesRef.current = Array(floors).fill(null); 
+    consecutiveGemsRef.current = 0; 
   };
 
 
@@ -218,7 +218,7 @@ const TowerQuestGame = () => {
 
   
   const cancelAutoPlay = () => {
-    setIsAutoPlay(false); // Stop auto-play
+    setIsAutoPlay(false);
 
   
     if (intervalRef.current) {
@@ -238,7 +238,6 @@ const TowerQuestGame = () => {
 
   return (
     <div>
-      {/* Show graffiti animation if the player wins */}
       {showGraffiti && <Graffiti />}
 
       <div>
@@ -269,12 +268,12 @@ const TowerQuestGame = () => {
             key={floorIndex}
             floorNumber={floorIndex + 1}
             boxes={floorBoxes}
-            isActive={floorIndex + 1 === currentFloor} // Only the current floor is active
-            selectedBox={selectedBoxes[floorIndex]} // Pass the selected box index
+            isActive={floorIndex + 1 === currentFloor} 
+            selectedBox={selectedBoxes[floorIndex]} 
             bobs={isBobs}
             onBoxSelect={
               floorIndex + 1 === currentFloor ? handleBoxSelect : null
-            } // Only allow selection on the current floor
+            } 
           />
         ))}
       </div>
